@@ -51,7 +51,6 @@ class OnCall {
             DAYS[today]
           }${FORMAT_OUTPUT.holiday} ${yesterdayOnCall}`
         );
-
         continue;
       } else {
         yesterdayOnCall = this.#getWeekWorker(yesterdayOnCall);
