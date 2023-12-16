@@ -56,23 +56,23 @@ class OnCallController {
   }
 
   async #getOnCallList() {
-    await this.#getWeekOnCall();
-    // this.#getWeekendOnCall();
-  }
-
-  async #getWeekOnCall() {
     let isValid = false;
 
     while (!isValid) {
       try {
-        const readWeekOnCall = await InputView.readWeekOnCall();
-        this.#weekOnCall = readWeekOnCall.split(",");
-        this.#validateWeekOnCall();
+        await this.#getWeekOnCall();
+        // this.#getWeekendOnCall();
         isValid = true;
       } catch (error) {
         OutputView.error(`유효하지 않은 입력 값입니다. ${error.message}`);
       }
     }
+  }
+
+  async #getWeekOnCall() {
+    const readWeekOnCall = await InputView.readWeekOnCall();
+    this.#weekOnCall = readWeekOnCall.split(",");
+    this.#validateWeekOnCall();
   }
 
   #validateWeekOnCall() {
