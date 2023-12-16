@@ -1,4 +1,5 @@
 import { Console } from "@woowacourse/mission-utils";
+import ERROR from "../constants/error.js";
 
 const OutputView = {
   print(message) {
@@ -6,7 +7,7 @@ const OutputView = {
   },
 
   error(error) {
-    this.print(`[ERROR] ${error}`);
+    this.print(`${ERROR.ERROR} ${error}`);
   },
 };
 

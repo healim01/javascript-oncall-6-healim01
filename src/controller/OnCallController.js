@@ -3,6 +3,7 @@ import InputView from "../view/InputView.js";
 import OutputView from "../view/OutputView.js";
 // Model
 import OnCall from "../model/OnCall.js";
+import ERROR from "../constants/error.js";
 
 class OnCallController {
   #month;
@@ -37,7 +38,7 @@ class OnCallController {
         this.#validateMonthAndStartDay();
         isValid = true;
       } catch (error) {
-        OutputView.error(`유효하지 않은 입력 값입니다. ${error.message}`);
+        OutputView.error(`${ERROR.INVALID_INPUT} ${error.message}`);
       }
     }
   }
@@ -48,15 +49,15 @@ class OnCallController {
     const startDay = this.#startDate;
 
     if (month < 1 || month > 12) {
-      throw new Error("월은 1~12 사이의 값이어야 합니다.");
+      throw new Error(ERROR.INVALID_MONTH);
     }
 
     if (startDay.length !== 1) {
-      throw new Error("요일은 한 글자의 값이어야 합니다.");
+      throw new Error(ERROR.INVALID_STARTDAY_LENGTH);
     }
 
     if (!days.includes(startDay)) {
-      throw new Error("요일은 일월화수목금토 중 하나의 값이어야 합니다.");
+      throw new Error(ERROR.INVALID_STARTDAY);
     }
   }
 
@@ -69,7 +70,7 @@ class OnCallController {
         await this.#getWeekendOnCall();
         isValid = true;
       } catch (error) {
-        OutputView.error(`유효하지 않은 입력 값입니다. ${error.message}`);
+        OutputView.error(`${ERROR.ERROR} ${error.message}`);
       }
     }
   }
@@ -89,18 +90,16 @@ class OnCallController {
   #validateOnCall(onCallList) {
     const checkNameLength = onCallList.every((name) => name.length < 5);
     if (!checkNameLength) {
-      throw new Error("닉네임은 5글자 이하의 값이어야 합니다.");
+      throw new Error(ERROR.INVALID_NAME_LENGTH);
     }
 
     const checkDuplicateName = new Set(onCallList).size !== onCallList.length;
     if (checkDuplicateName) {
-      throw new Error(
-        "비상 근무자는 평일 순번, 휴일 순번에 각각 1회만 편성되어야 합니다."
-      );
+      throw new Error(ERROR.INVALID_WORK_TIME);
     }
 
     if (onCallList.length < 5 || onCallList.length > 35) {
-      throw new Error("비상 근무자는 최소 5명, 최대 35명이어야 합니다.");
+      throw new Error(ERROR.INVALID_WORKER_NUMBER);
     }
   }
 
