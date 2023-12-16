@@ -1,23 +1,28 @@
-import { Console } from "@woowacourse/mission-utils";
+// View
 import InputView from "../view/InputView.js";
 import OutputView from "../view/OutputView.js";
+// Model
+import OnCall from "../model/OnCall.js";
 
 class OnCallController {
   #month;
   #startDate;
   #weekOnCall;
   #weekendOnCall;
+  #onCall;
 
   constructor() {
     this.#month = 0;
     this.#startDate = "";
     this.#weekOnCall = [];
     this.#weekendOnCall = [];
+    this.#onCall = new OnCall();
   }
 
   async start() {
     await this.#getMonthAndStartDay();
     await this.#getOnCallList();
+    this.#setOnCallList();
   }
 
   async #getMonthAndStartDay() {
@@ -97,6 +102,16 @@ class OnCallController {
     if (onCallList.length < 5 || onCallList.length > 35) {
       throw new Error("비상 근무자는 최소 5명, 최대 35명이어야 합니다.");
     }
+  }
+
+  #setOnCallList() {
+    const onCallList = this.#onCall.setOnCall(
+      this.#month,
+      this.#startDate,
+      this.#weekOnCall,
+      this.#weekendOnCall
+    );
+    OutputView.print(onCallList);
   }
 }
 export default OnCallController;
