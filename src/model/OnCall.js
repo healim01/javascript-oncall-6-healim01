@@ -6,19 +6,23 @@ import {
 } from "../constants/system.js";
 
 class OnCall {
+  #month;
+  #monthDays;
+  #startDateIndex;
+  #weekOnCall;
+  #weekendOnCall;
+  #specialDays;
+
   setOnCall(month, startDay, weekOnCall, weekendOnCall) {
+    this.#month = month;
+    this.#weekOnCall = weekOnCall;
+    this.#weekendOnCall = weekendOnCall;
+
     const monthIndex = Number(month) - 1;
-    const startDateIndex = this.#getStartDateIndex(startDay);
-    const monthDays = this.#getMonthDays(monthIndex);
-    const specialDays = SPECIAL_MONTHS[monthIndex].split(",");
-    const onCallList = this.#setOnCallList(
-      month,
-      monthDays,
-      startDateIndex,
-      weekOnCall,
-      weekendOnCall,
-      specialDays
-    );
+    this.#startDateIndex = this.#getStartDateIndex(startDay);
+    this.#monthDays = this.#getMonthDays(monthIndex);
+    this.#specialDays = SPECIAL_MONTHS[monthIndex].split(",");
+    const onCallList = this.#setOnCallList();
 
     return onCallList;
   }
@@ -31,59 +35,60 @@ class OnCall {
     return MONTHS[monthIndex];
   }
 
-  #setOnCallList(
-    month,
-    monthDays,
-    startDateIndex,
-    weekOnCall,
-    weekendOnCall,
-    speicalDays
-  ) {
+  #setOnCallList() {
     let onCallList = [];
     let yesterdayOnCall = "";
 
-    for (let i = 1; i <= monthDays; i++) {
-      const today = (i + startDateIndex - 1) % 7;
+    for (let i = 1; i <= this.#monthDays; i++) {
+      const today = (i + this.#startDateIndex - 1) % 7;
 
       if (today === 0 || today === 6) {
-        if (weekendOnCall[0] !== yesterdayOnCall) {
-          yesterdayOnCall = weekendOnCall[0];
-          weekendOnCall.shift();
-        } else {
-          yesterdayOnCall = weekendOnCall[1];
-          weekendOnCall.splice(1, 1);
-        }
-        weekendOnCall.push(yesterdayOnCall);
-      } else if (speicalDays.includes(i.toString())) {
-        if (weekendOnCall[0] !== yesterdayOnCall) {
-          yesterdayOnCall = weekendOnCall[0];
-          weekendOnCall.shift();
-        } else {
-          yesterdayOnCall = weekendOnCall[1];
-          weekendOnCall.splice(1, 1);
-        }
+        yesterdayOnCall = this.#getWeekendWorker(yesterdayOnCall);
+      } else if (this.#specialDays.includes(i.toString())) {
+        yesterdayOnCall = this.#getWeekendWorker(yesterdayOnCall);
         onCallList.push(
-          `${month}${FORMAT_OUTPUT.month} ${i}${FORMAT_OUTPUT.date} ${DAYS[today]}${FORMAT_OUTPUT.holiday} ${yesterdayOnCall}`
+          `${this.#month}${FORMAT_OUTPUT.month} ${i}${FORMAT_OUTPUT.date} ${
+            DAYS[today]
+          }${FORMAT_OUTPUT.holiday} ${yesterdayOnCall}`
         );
-        weekendOnCall.push(yesterdayOnCall);
+
         continue;
       } else {
-        if (weekOnCall[0] !== yesterdayOnCall) {
-          yesterdayOnCall = weekOnCall[0];
-          weekOnCall.shift();
-        } else {
-          yesterdayOnCall = weekOnCall[1];
-          weekOnCall.splice(1, 1);
-        }
-        weekOnCall.push(yesterdayOnCall);
+        yesterdayOnCall = this.#getWeekWorker(yesterdayOnCall);
       }
 
       onCallList.push(
-        `${month}${FORMAT_OUTPUT.month} ${i}${FORMAT_OUTPUT.date} ${DAYS[today]} ${yesterdayOnCall}`
+        `${this.#month}${FORMAT_OUTPUT.month} ${i}${FORMAT_OUTPUT.date} ${
+          DAYS[today]
+        } ${yesterdayOnCall}`
       );
     }
 
     return onCallList;
+  }
+
+  #getWeekendWorker(yesterdayOnCall) {
+    if (this.#weekendOnCall[0] !== yesterdayOnCall) {
+      yesterdayOnCall = this.#weekendOnCall[0];
+      this.#weekendOnCall.shift();
+    } else {
+      yesterdayOnCall = this.#weekendOnCall[1];
+      this.#weekendOnCall.splice(1, 1);
+    }
+    this.#weekendOnCall.push(yesterdayOnCall);
+    return yesterdayOnCall;
+  }
+
+  #getWeekWorker(yesterdayOnCall) {
+    if (this.#weekOnCall[0] !== yesterdayOnCall) {
+      yesterdayOnCall = this.#weekOnCall[0];
+      this.#weekOnCall.shift();
+    } else {
+      yesterdayOnCall = this.#weekOnCall[1];
+      this.#weekOnCall.splice(1, 1);
+    }
+    this.#weekOnCall.push(yesterdayOnCall);
+    return yesterdayOnCall;
   }
 }
 export default OnCall;
