@@ -61,7 +61,7 @@ class OnCallController {
     while (!isValid) {
       try {
         await this.#getWeekOnCall();
-        // this.#getWeekendOnCall();
+        await this.#getWeekendOnCall();
         isValid = true;
       } catch (error) {
         OutputView.error(`유효하지 않은 입력 값입니다. ${error.message}`);
@@ -72,24 +72,29 @@ class OnCallController {
   async #getWeekOnCall() {
     const readWeekOnCall = await InputView.readWeekOnCall();
     this.#weekOnCall = readWeekOnCall.split(",");
-    this.#validateWeekOnCall();
+    this.#validateOnCall(this.#weekOnCall);
   }
 
-  #validateWeekOnCall() {
-    const checkNameLength = this.#weekOnCall.every((name) => name.length < 5);
+  async #getWeekendOnCall() {
+    const readWeekendOnCall = await InputView.readWeekendOnCall();
+    this.#weekendOnCall = readWeekendOnCall.split(",");
+    this.#validateOnCall(this.#weekendOnCall);
+  }
+
+  #validateOnCall(onCallList) {
+    const checkNameLength = onCallList.every((name) => name.length < 5);
     if (!checkNameLength) {
       throw new Error("닉네임은 5글자 이하의 값이어야 합니다.");
     }
 
-    const checkDuplicateName =
-      new Set(this.#weekOnCall).size !== this.#weekOnCall.length;
+    const checkDuplicateName = new Set(onCallList).size !== onCallList.length;
     if (checkDuplicateName) {
       throw new Error(
         "비상 근무자는 평일 순번, 휴일 순번에 각각 1회만 편성되어야 합니다."
       );
     }
 
-    if (this.#weekOnCall.length < 5 || this.#weekOnCall.length > 35) {
+    if (onCallList.length < 5 || onCallList.length > 35) {
       throw new Error("비상 근무자는 최소 5명, 최대 35명이어야 합니다.");
     }
   }
