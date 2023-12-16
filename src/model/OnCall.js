@@ -69,6 +69,7 @@ class OnCall {
           );
           weekendOnCall.splice(1, 1);
         }
+        weekendOnCall.push(yesterdayOnCall);
       } else if (speicalDays.includes(i.toString())) {
         if (weekendOnCall[0] !== yesterdayOnCall) {
           yesterdayOnCall = weekendOnCall[0];
@@ -82,6 +83,7 @@ class OnCall {
           );
           weekendOnCall.splice(1, 1);
         }
+        weekendOnCall.push(yesterdayOnCall);
       } else {
         if (weekOnCall[0] !== yesterdayOnCall) {
           yesterdayOnCall = weekOnCall[0];
@@ -93,6 +95,7 @@ class OnCall {
           onCallList.push(`${month}월 ${i}일 ${days[today]} ${weekOnCall[1]}`);
           weekOnCall.splice(1, 1);
         }
+        weekOnCall.push(yesterdayOnCall);
       }
     }
 
