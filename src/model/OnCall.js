@@ -3,7 +3,7 @@ import {
   FORMAT_OUTPUT,
   MONTHS,
   SPECIAL_MONTHS,
-} from "../constants/system";
+} from "../constants/system.js";
 
 class OnCall {
   setOnCall(month, startDay, weekOnCall, weekendOnCall) {
