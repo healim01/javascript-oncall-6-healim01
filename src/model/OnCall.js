@@ -27,8 +27,14 @@ class OnCall {
       weekendOnCall,
       specialDays
     );
+    const formattedOnCallList = this.#formatOnCallList(
+      month,
+      monthDays,
+      startDateIndex,
+      onCallList
+    );
 
-    return onCallList;
+    return formattedOnCallList;
   }
 
   #getStartDateIndex(startDay) {
@@ -84,6 +90,20 @@ class OnCall {
     }
 
     return onCallList;
+  }
+
+  #formatOnCallList(month, monthDays, startDateIndex, onCallList) {
+    let formattedOnCallList = "";
+    const days = ["일", "월", "화", "수", "목", "금", "토"];
+
+    for (let i = 1; i <= monthDays; i++) {
+      const today = (i + startDateIndex - 1) % 7;
+      formattedOnCallList += `${month}월 ${i}일 ${days[today]} ${
+        onCallList[i - 1]
+      }\n`;
+    }
+
+    return formattedOnCallList;
   }
 }
 export default OnCall;

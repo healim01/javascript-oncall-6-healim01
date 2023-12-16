@@ -111,6 +111,7 @@ class OnCallController {
       this.#weekOnCall,
       this.#weekendOnCall
     );
+    OutputView.print("");
     OutputView.print(onCallList);
   }
 }
