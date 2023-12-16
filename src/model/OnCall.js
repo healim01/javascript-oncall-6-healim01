@@ -21,20 +21,15 @@ class OnCall {
     const monthDays = this.#getMonthDays(monthIndex);
     const specialDays = this.#specialMonths[monthIndex].split(",");
     const onCallList = this.#setOnCallList(
+      month,
       monthDays,
       startDateIndex,
       weekOnCall,
       weekendOnCall,
       specialDays
     );
-    const formattedOnCallList = this.#formatOnCallList(
-      month,
-      monthDays,
-      startDateIndex,
-      onCallList
-    );
 
-    return formattedOnCallList;
+    return onCallList;
   }
 
   #getStartDateIndex(startDay) {
@@ -47,12 +42,14 @@ class OnCall {
   }
 
   #setOnCallList(
+    month,
     monthDays,
     startDateIndex,
     weekOnCall,
     weekendOnCall,
     speicalDays
   ) {
+    const days = ["일", "월", "화", "수", "목", "금", "토"];
     let onCallList = [];
     let yesterdayOnCall = "";
 
@@ -62,48 +59,44 @@ class OnCall {
       if (today === 0 || today === 6) {
         if (weekendOnCall[0] !== yesterdayOnCall) {
           yesterdayOnCall = weekendOnCall[0];
-          onCallList.push(weekendOnCall.shift());
+          onCallList.push(
+            `${month}월 ${i}일 ${days[today]} ${weekendOnCall.shift()}`
+          );
         } else {
           yesterdayOnCall = weekendOnCall[1];
-          onCallList.push(weekendOnCall[1]);
+          onCallList.push(
+            `${month}월 ${i}일 ${days[today]} ${weekendOnCall[1]}`
+          );
           weekendOnCall.splice(1, 1);
         }
       } else if (speicalDays.includes(i.toString())) {
         if (weekendOnCall[0] !== yesterdayOnCall) {
           yesterdayOnCall = weekendOnCall[0];
-          onCallList.push(weekendOnCall.shift());
+          onCallList.push(
+            `${month}월 ${i}일 ${days[today]}(휴일) ${weekendOnCall.shift()}`
+          );
         } else {
           yesterdayOnCall = weekendOnCall[1];
-          onCallList.push(weekendOnCall[1]);
+          onCallList.push(
+            `${month}월 ${i}일 ${days[today]}(휴일) ${weekendOnCall[1]}`
+          );
           weekendOnCall.splice(1, 1);
         }
       } else {
         if (weekOnCall[0] !== yesterdayOnCall) {
           yesterdayOnCall = weekOnCall[0];
-          onCallList.push(weekOnCall.shift());
+          onCallList.push(
+            `${month}월 ${i}일 ${days[today]} ${weekOnCall.shift()}`
+          );
         } else {
           yesterdayOnCall = weekOnCall[1];
-          onCallList.push(weekOnCall[1]);
+          onCallList.push(`${month}월 ${i}일 ${days[today]} ${weekOnCall[1]}`);
           weekOnCall.splice(1, 1);
         }
       }
     }
 
     return onCallList;
-  }
-
-  #formatOnCallList(month, monthDays, startDateIndex, onCallList) {
-    let formattedOnCallList = "";
-    const days = ["일", "월", "화", "수", "목", "금", "토"];
-
-    for (let i = 1; i <= monthDays; i++) {
-      const today = (i + startDateIndex - 1) % 7;
-      formattedOnCallList += `${month}월 ${i}일 ${days[today]} ${
-        onCallList[i - 1]
-      }\n`;
-    }
-
-    return formattedOnCallList;
   }
 }
 export default OnCall;

@@ -112,7 +112,7 @@ class OnCallController {
       this.#weekendOnCall
     );
     OutputView.print("");
-    OutputView.print(onCallList);
+    onCallList.forEach((onCall) => OutputView.print(onCall));
   }
 }
 export default OnCallController;
