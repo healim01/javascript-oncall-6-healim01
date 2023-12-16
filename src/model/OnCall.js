@@ -1,26 +1,16 @@
-class OnCall {
-  #days = ["일", "월", "화", "수", "목", "금", "토"];
-  #months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  #specialMonths = [
-    "1",
-    "0",
-    "1",
-    "0",
-    "5",
-    "6",
-    "0",
-    "15",
-    "0",
-    "3,9",
-    "0",
-    "25",
-  ];
+import {
+  DAYS,
+  FORMAT_OUTPUT,
+  MONTHS,
+  SPECIAL_MONTHS,
+} from "../constants/system";
 
+class OnCall {
   setOnCall(month, startDay, weekOnCall, weekendOnCall) {
     const monthIndex = Number(month) - 1;
     const startDateIndex = this.#getStartDateIndex(startDay);
     const monthDays = this.#getMonthDays(monthIndex);
-    const specialDays = this.#specialMonths[monthIndex].split(",");
+    const specialDays = SPECIAL_MONTHS[monthIndex].split(",");
     const onCallList = this.#setOnCallList(
       month,
       monthDays,
@@ -34,11 +24,11 @@ class OnCall {
   }
 
   #getStartDateIndex(startDay) {
-    return this.#days.indexOf(startDay);
+    return DAYS.indexOf(startDay);
   }
 
   #getMonthDays(monthIndex) {
-    return this.#months[monthIndex];
+    return MONTHS[monthIndex];
   }
 
   #setOnCallList(
@@ -73,7 +63,7 @@ class OnCall {
           weekendOnCall.splice(1, 1);
         }
         onCallList.push(
-          `${month}월 ${i}일 ${this.#days[today]}(휴일) ${yesterdayOnCall}`
+          `${month}${FORMAT_OUTPUT.month} ${i}${FORMAT_OUTPUT.date} ${DAYS[today]}${FORMAT_OUTPUT.holiday} ${yesterdayOnCall}`
         );
         weekendOnCall.push(yesterdayOnCall);
         continue;
@@ -89,7 +79,7 @@ class OnCall {
       }
 
       onCallList.push(
-        `${month}월 ${i}일 ${this.#days[today]} ${yesterdayOnCall}`
+        `${month}${FORMAT_OUTPUT.month} ${i}${FORMAT_OUTPUT.date} ${DAYS[today]} ${yesterdayOnCall}`
       );
     }
 

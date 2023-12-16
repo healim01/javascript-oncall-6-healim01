@@ -1,4 +1,5 @@
 import { Console } from "@woowacourse/mission-utils";
+// constants
 import ERROR from "../constants/error.js";
 
 const OutputView = {

@@ -3,7 +3,14 @@ import InputView from "../view/InputView.js";
 import OutputView from "../view/OutputView.js";
 // Model
 import OnCall from "../model/OnCall.js";
+// constants
 import ERROR from "../constants/error.js";
+import {
+  DAYS,
+  VALID_MONTH,
+  VALID_NAME_LENGTH,
+  VALID_WORKER_NUMBER,
+} from "../constants/system.js";
 
 class OnCallController {
   #month;
@@ -44,11 +51,10 @@ class OnCallController {
   }
 
   #validateMonthAndStartDay() {
-    const days = "일월화수목금토";
     const month = Number(this.#month);
     const startDay = this.#startDate;
 
-    if (month < 1 || month > 12) {
+    if (month < VALID_MONTH.min || month > VALID_MONTH.max) {
       throw new Error(ERROR.INVALID_MONTH);
     }
 
@@ -56,7 +62,7 @@ class OnCallController {
       throw new Error(ERROR.INVALID_STARTDAY_LENGTH);
     }
 
-    if (!days.includes(startDay)) {
+    if (!DAYS.includes(startDay)) {
       throw new Error(ERROR.INVALID_STARTDAY);
     }
   }
@@ -88,7 +94,9 @@ class OnCallController {
   }
 
   #validateOnCall(onCallList) {
-    const checkNameLength = onCallList.every((name) => name.length < 5);
+    const checkNameLength = onCallList.every(
+      (name) => name.length < VALID_NAME_LENGTH
+    );
     if (!checkNameLength) {
       throw new Error(ERROR.INVALID_NAME_LENGTH);
     }
@@ -98,7 +106,10 @@ class OnCallController {
       throw new Error(ERROR.INVALID_WORK_TIME);
     }
 
-    if (onCallList.length < 5 || onCallList.length > 35) {
+    if (
+      onCallList.length < VALID_WORKER_NUMBER.min ||
+      onCallList.length > VALID_WORKER_NUMBER.max
+    ) {
       throw new Error(ERROR.INVALID_WORKER_NUMBER);
     }
   }
