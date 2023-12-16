@@ -59,44 +59,37 @@ class OnCall {
       if (today === 0 || today === 6) {
         if (weekendOnCall[0] !== yesterdayOnCall) {
           yesterdayOnCall = weekendOnCall[0];
-          onCallList.push(
-            `${month}월 ${i}일 ${days[today]} ${weekendOnCall.shift()}`
-          );
+          weekendOnCall.shift();
         } else {
           yesterdayOnCall = weekendOnCall[1];
-          onCallList.push(
-            `${month}월 ${i}일 ${days[today]} ${weekendOnCall[1]}`
-          );
           weekendOnCall.splice(1, 1);
         }
         weekendOnCall.push(yesterdayOnCall);
       } else if (speicalDays.includes(i.toString())) {
         if (weekendOnCall[0] !== yesterdayOnCall) {
           yesterdayOnCall = weekendOnCall[0];
-          onCallList.push(
-            `${month}월 ${i}일 ${days[today]}(휴일) ${weekendOnCall.shift()}`
-          );
+          weekendOnCall.shift();
         } else {
           yesterdayOnCall = weekendOnCall[1];
-          onCallList.push(
-            `${month}월 ${i}일 ${days[today]}(휴일) ${weekendOnCall[1]}`
-          );
           weekendOnCall.splice(1, 1);
         }
+        onCallList.push(
+          `${month}월 ${i}일 ${days[today]}(휴일) ${yesterdayOnCall}`
+        );
         weekendOnCall.push(yesterdayOnCall);
+        continue;
       } else {
         if (weekOnCall[0] !== yesterdayOnCall) {
           yesterdayOnCall = weekOnCall[0];
-          onCallList.push(
-            `${month}월 ${i}일 ${days[today]} ${weekOnCall.shift()}`
-          );
+          weekOnCall.shift();
         } else {
           yesterdayOnCall = weekOnCall[1];
-          onCallList.push(`${month}월 ${i}일 ${days[today]} ${weekOnCall[1]}`);
           weekOnCall.splice(1, 1);
         }
         weekOnCall.push(yesterdayOnCall);
       }
+
+      onCallList.push(`${month}월 ${i}일 ${days[today]} ${yesterdayOnCall}`);
     }
 
     return onCallList;
