@@ -1,4 +1,5 @@
 class OnCall {
+  #days = ["일", "월", "화", "수", "목", "금", "토"];
   #months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   #specialMonths = [
     "1",
@@ -33,8 +34,7 @@ class OnCall {
   }
 
   #getStartDateIndex(startDay) {
-    const days = "일월화수목금토";
-    return days.indexOf(startDay);
+    return this.#days.indexOf(startDay);
   }
 
   #getMonthDays(monthIndex) {
@@ -49,7 +49,6 @@ class OnCall {
     weekendOnCall,
     speicalDays
   ) {
-    const days = ["일", "월", "화", "수", "목", "금", "토"];
     let onCallList = [];
     let yesterdayOnCall = "";
 
@@ -74,7 +73,7 @@ class OnCall {
           weekendOnCall.splice(1, 1);
         }
         onCallList.push(
-          `${month}월 ${i}일 ${days[today]}(휴일) ${yesterdayOnCall}`
+          `${month}월 ${i}일 ${this.#days[today]}(휴일) ${yesterdayOnCall}`
         );
         weekendOnCall.push(yesterdayOnCall);
         continue;
@@ -89,7 +88,9 @@ class OnCall {
         weekOnCall.push(yesterdayOnCall);
       }
 
-      onCallList.push(`${month}월 ${i}일 ${days[today]} ${yesterdayOnCall}`);
+      onCallList.push(
+        `${month}월 ${i}일 ${this.#days[today]} ${yesterdayOnCall}`
+      );
     }
 
     return onCallList;
